@@ -1,0 +1,45 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Provide support for MediaElement.js to the entire site of just Filefield.
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function mediaelement_menu() {
+  return array(
+    'admin/settings/mediaelement' => array(
+      'title' => 'MediaElement.js',
+      'description' => 'Settings for MediaElement.js integration with Drupal',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('mediaelement_admin_form'),
+      'access arguments' => array('administer MediaElement'),
+      'file' => 'mediaelement.admin.inc',
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function mediaelement_perm() {
+  return array('administer MediaElement');
+}
+
+/**
+ * Implementation of hook_init().
+ */
+function mediaelement_init() {
+  // When the media player is set to be on all pages add it to the page.
+  if (variable_get('mediaelement_sitewide', FALSE)) {
+    $path = libraries_get_path('mediaelement');
+    drupal_add_js($path .'/src/mediaelement.js');
+    drupal_add_js($path .'/src/mediaelementplayer.js');
+    drupal_add_js(array('mediaelement' => array('all' => TRUE)), 'setting');
+    drupal_add_js(drupal_get_path('module', 'mediaelement') .'/mediaelement.js');
+    drupal_add_css($path .'/src/mediaelementplayer.css');
+  }
+}

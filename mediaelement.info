@@ -1,0 +1,6 @@
+; $Id$
+name = "MediaElement.js"
+description = "Provide MediaElement.js to be used on the entire site or just with Filefields."
+dependencies[] = libraries
+core = 6.x
+php = 5.2
