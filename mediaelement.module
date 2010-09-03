@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Provide support for MediaElement.js to the entire site of just Filefield.
+ * Provides HTML5 video and audio elements using Mediaelement.js for HTML4 browsers.
  */
 
 /**
@@ -11,7 +11,7 @@
  */
 function mediaelement_menu() {
   return array(
-    'admin/settings/mediaelement' => array(
+    'admin/config/media/mediaelement' => array(
       'title' => 'MediaElement.js',
       'description' => 'Settings for MediaElement.js integration with Drupal',
       'page callback' => 'drupal_get_form',
@@ -24,9 +24,33 @@ function mediaelement_menu() {
 
 /**
  * Implementation of hook_perm().
+ * @todo: port this properly.
+ * @note: does this really need a separate perm?
  */
 function mediaelement_perm() {
   return array('administer MediaElement');
+}
+
+/**
+ * Implementation of hook_library().
+ */
+function mediaelement_library() {
+  $path = libraries_get_path('mediaelement');
+  $libraries = array();
+  
+  $libraries['mediaelement'] = array(
+    'title' => 'Media Element',
+    'website' => 'http://mediaelementjs.com/',
+    'version' => '7.x',
+    'js' => array(
+      $path . '/src/mediaelement.js' => array('weight' => JS_LIBRARY - 5),
+      $path . '/src/mediaelementplayer.js' => array('weight' => JS_LIBRARY - 5),
+    ),
+    'css' => array(
+      $path .  '/src/mediaelementplayer.css'
+    ),
+  );
+  return $libraries;
 }
 
 /**
@@ -35,11 +59,98 @@ function mediaelement_perm() {
 function mediaelement_init() {
   // When the media player is set to be on all pages add it to the page.
   if (variable_get('mediaelement_sitewide', FALSE)) {
-    $path = libraries_get_path('mediaelement');
-    drupal_add_js($path .'/src/mediaelement.js');
-    drupal_add_js($path .'/src/mediaelementplayer.js');
-    drupal_add_js(array('mediaelement' => array('all' => TRUE)), 'setting');
-    drupal_add_js(drupal_get_path('module', 'mediaelement') .'/mediaelement.js');
-    drupal_add_css($path .'/src/mediaelementplayer.css');
+    drupal_add_library('mediaelement', 'mediaelement');
+    drupal_add_js(drupal_get_path('module', 'mediaelement') . '/mediaelement.js');
   }
+}
+
+
+/**
+ * Implements hook_field_formatter_info().
+ * Not sure this belongs here, it is really just for embedding HTML5 audio/video 
+ */
+function mediaelement_field_formatter_info() {
+  $formatters = array();
+  
+  $formatters['mediaelement_video'] = array(
+    'label' => t('MediaElement Video'),
+    'field types' => array('file'),
+  );
+  
+  $formatters['mediaelement_audio'] = array(
+    'label' => t('MediaElement Audio'),
+    'field types' => array('file'),
+  );
+  
+  return $formatters;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function mediaelement_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+
+  foreach ($items as $delta => $item) {
+    $element[$delta] = array(
+      '#item' => $item,
+      '#path' => isset($uri) ? $uri : '',
+    );
+    if ($display['type'] == 'mediaelement_video') {
+      $element[$delta]['#theme'] = 'mediaelement_video_formatter';
+    }
+    elseif ($display['type'] == 'mediaelement_audio') {
+      $element[$delta]['#theme'] = 'mediaelement_audio_formatter';
+    }
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function mediaelement_theme() {
+  return array(
+    'mediaelement_video_formatter' => array(
+      'variables' => array('item' => NULL),
+    ),
+    'mediaelement_audio_formatter' => array(
+      'variables' => array('item' => NULL),
+    ),
+    'mediaelement_video' => array(
+      'variables' => array('src' => NULL, 'controls' => TRUE),
+    ),
+    'mediaelement_audio' => array(
+      'variables' => array('src' => NULL, 'controls' => TRUE),
+    ),
+  );
+}
+
+function theme_mediaelement_video_formatter($variables) {
+  $item = $variables['item'];
+  $properties = array(
+    'src' => file_create_url($item['uri']),
+  );
+  return theme('mediaelement_video', $properties);
+  
+}
+
+function theme_mediaelement_audio_formatter($variables) {
+  $item = $variables['item'];
+  $properties = array(
+    'src' => file_create_url($item['uri']),
+  );
+  return theme('mediaelement_audio', $properties);
+}
+
+function theme_mediaelement_video($variables) {
+  $src = $variables['src'];
+  $controls = $variables['controls'];
+  return '<video controls="'.$controls.'" src="' . $src . '" width="100px" height="100px" />';
+}
+
+function theme_mediaelement_audio($variables) {
+  $src = $variables['src'];
+  $controls = $variables['controls'];
+  return '<audio controls="'.$controls.'" src="' . $src . '" />';
 }
