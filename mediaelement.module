@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function mediaelement_menu() {
   return array(
@@ -16,28 +16,19 @@ function mediaelement_menu() {
       'description' => 'Settings for MediaElement.js integration with Drupal',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('mediaelement_admin_form'),
-      'access arguments' => array('administer MediaElement'),
+      'access arguments' => array('administer site configuration'),
       'file' => 'mediaelement.admin.inc',
     ),
   );
 }
 
 /**
- * Implementation of hook_perm().
- * @todo: port this properly.
- * @note: does this really need a separate perm?
- */
-function mediaelement_perm() {
-  return array('administer MediaElement');
-}
-
-/**
- * Implementation of hook_library().
+ * Implements hook_library().
  */
 function mediaelement_library() {
   $path = libraries_get_path('mediaelement');
   $libraries = array();
-  
+
   $libraries['mediaelement'] = array(
     'title' => 'Media Element',
     'website' => 'http://mediaelementjs.com/',
@@ -47,41 +38,43 @@ function mediaelement_library() {
       $path . '/src/mediaelementplayer.js' => array('weight' => JS_LIBRARY - 5),
     ),
     'css' => array(
-      $path .  '/src/mediaelementplayer.css'
+      $path . '/src/mediaelementplayer.css'
     ),
   );
   return $libraries;
 }
 
 /**
- * Implementation of hook_init().
+ * Implements hook_init().
  */
 function mediaelement_init() {
   // When the media player is set to be on all pages add it to the page.
   if (variable_get('mediaelement_sitewide', FALSE)) {
     drupal_add_library('mediaelement', 'mediaelement');
     drupal_add_js(drupal_get_path('module', 'mediaelement') . '/mediaelement.js');
+    drupal_add_js(array('mediaelementAll' => TRUE), array('type' => 'setting'));
   }
 }
 
 
 /**
  * Implements hook_field_formatter_info().
- * Not sure this belongs here, it is really just for embedding HTML5 audio/video 
  */
 function mediaelement_field_formatter_info() {
   $formatters = array();
-  
+
   $formatters['mediaelement_video'] = array(
     'label' => t('MediaElement Video'),
     'field types' => array('file'),
+    'settings' => array('height' => '500', 'width' => '500'),
   );
-  
+
   $formatters['mediaelement_audio'] = array(
     'label' => t('MediaElement Audio'),
     'field types' => array('file'),
+    'settings' => array('height' => '30', 'width' => '300'),
   );
-  
+
   return $formatters;
 }
 
@@ -89,18 +82,47 @@ function mediaelement_field_formatter_info() {
  * Implements hook_field_formatter_view().
  */
 function mediaelement_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  // A unique caller per page for the JS specific settings to use. This may be
+  // different for ever page view and should not be used for styling.
+  static $id = 0;
   $element = array();
-
+  $path = drupal_get_path('module', 'mediaelement');
   foreach ($items as $delta => $item) {
-    $element[$delta] = array(
-      '#item' => $item,
-      '#path' => isset($uri) ? $uri : '',
-    );
+    $settings = $display['settings'];
     if ($display['type'] == 'mediaelement_video') {
-      $element[$delta]['#theme'] = 'mediaelement_video_formatter';
+      $settings['videoHeight'] = (int)$settings['height'];
+      $settings['videoWidth'] = (int)$settings['width'];
+      unset($settings['height'], $settings['width']);
     }
     elseif ($display['type'] == 'mediaelement_audio') {
-      $element[$delta]['#theme'] = 'mediaelement_audio_formatter';
+      $settings['audioHeight'] = (int)$settings['height'];
+      $settings['audioWidth'] = (int)$settings['width'];
+      unset($settings['height'], $settings['width']);
+    }
+
+    $class = 'mediaelement-formatter-identifier-' . time() . '-' . $id++;
+    $element[$delta] = array(
+      '#attributes' => array(
+        'src' => file_create_url($item['uri']),
+        'class' => $class,
+      ),
+      '#settings' => $settings,
+      '#attached' => array(
+        'library' => array(array('mediaelement', 'mediaelement')),
+        'js' => array(
+          $path . '/mediaelement.js' => array(),
+          0 => array('type' => 'setting', 'data' => array('mediaelement' => array('.' . $class => $settings))),
+        ),
+      ),
+    );
+
+    if ($display['type'] == 'mediaelement_video') {
+      $element[$delta]['#theme'] = 'mediaelement_video';
+      $element[$delta]['#attributes']['height'] = $display['settings']['height'];
+      $element[$delta]['#attributes']['width'] = $display['settings']['width'];
+    }
+    elseif ($display['type'] == 'mediaelement_audio') {
+      $element[$delta]['#theme'] = 'mediaelement_audio';
     }
   }
   return $element;
@@ -111,46 +133,51 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
  */
 function mediaelement_theme() {
   return array(
-    'mediaelement_video_formatter' => array(
-      'variables' => array('item' => NULL),
-    ),
-    'mediaelement_audio_formatter' => array(
-      'variables' => array('item' => NULL),
-    ),
     'mediaelement_video' => array(
-      'variables' => array('src' => NULL, 'controls' => TRUE),
+      'variables' => array('attributes' => array(), 'settings' => array()),
     ),
     'mediaelement_audio' => array(
-      'variables' => array('src' => NULL, 'controls' => TRUE),
+      'variables' => array('attributes' => array(), 'settings' => array()),
     ),
   );
-}
-
-function theme_mediaelement_video_formatter($variables) {
-  $item = $variables['item'];
-  $properties = array(
-    'src' => file_create_url($item['uri']),
-  );
-  return theme('mediaelement_video', $properties);
-  
-}
-
-function theme_mediaelement_audio_formatter($variables) {
-  $item = $variables['item'];
-  $properties = array(
-    'src' => file_create_url($item['uri']),
-  );
-  return theme('mediaelement_audio', $properties);
 }
 
 function theme_mediaelement_video($variables) {
-  $src = $variables['src'];
-  $controls = $variables['controls'];
-  return '<video controls="'.$controls.'" src="' . $src . '" width="100px" height="100px" />';
+  return '<video ' . drupal_attributes($variables['attributes']) . ' ></video>';
 }
 
 function theme_mediaelement_audio($variables) {
-  $src = $variables['src'];
-  $controls = $variables['controls'];
-  return '<audio controls="'.$controls.'" src="' . $src . '" />';
+  return '<audio ' . drupal_attributes($variables['attributes']) . ' ></audio>';
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function mediaelement_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $form['height'] = array(
+    '#title' => t('Height'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['height'],
+  );
+
+  $form['width'] = array(
+    '#title' => t('Width'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['width'],
+    '#options' => $link_types,
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function mediaelement_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  return t('Height: @height px, Width: @width px', array('@height' => $settings['height'], '@width' => $settings['width']));
 }

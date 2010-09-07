@@ -1,7 +1,13 @@
 <?php
+// $Id$
 
 /**
- * Implementation of hook_uninstall().
+ * @file
+ * Install and uninstall functionality for the mediaelement module.
+ */
+
+/**
+ * Implements hook_uninstall().
  */
 function mediaelement_uninstall() {
   variable_del('mediaelement_sitewide');
