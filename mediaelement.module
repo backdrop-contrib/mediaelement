@@ -66,13 +66,19 @@ function mediaelement_field_formatter_info() {
   $formatters['mediaelement_video'] = array(
     'label' => t('MediaElement Video'),
     'field types' => array('file'),
-    'settings' => array('width' => '640', 'height' => '385'),
+    'settings' => array(
+      'width' => variable_get('mediaelement_video_default_width', '640'),
+      'height' => variable_get('mediaelement_video_default_height', '385')
+    ),
   );
 
   $formatters['mediaelement_audio'] = array(
     'label' => t('MediaElement Audio'),
     'field types' => array('file'),
-    'settings' => array('width' => '300', 'height' => '30'),
+    'settings' => array(
+      'width' => variable_get('mediaelement_audio_default_width', '300'),
+      'height' => variable_get('mediaelement_audio_default_height', '30')
+    ),
   );
 
   return $formatters;
