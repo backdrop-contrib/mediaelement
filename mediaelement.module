@@ -66,13 +66,13 @@ function mediaelement_field_formatter_info() {
   $formatters['mediaelement_video'] = array(
     'label' => t('MediaElement Video'),
     'field types' => array('file'),
-    'settings' => array('height' => '500', 'width' => '500'),
+    'settings' => array('width' => '640', 'height' => '385'),
   );
 
   $formatters['mediaelement_audio'] = array(
     'label' => t('MediaElement Audio'),
     'field types' => array('file'),
-    'settings' => array('height' => '30', 'width' => '300'),
+    'settings' => array('width' => '300', 'height' => '30'),
   );
 
   return $formatters;
@@ -157,17 +157,17 @@ function mediaelement_field_formatter_settings_form($field, $instance, $view_mod
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
 
-  $form['height'] = array(
-    '#title' => t('Height'),
-    '#type' => 'textfield',
-    '#default_value' => $settings['height'],
-  );
-
   $form['width'] = array(
     '#title' => t('Width'),
     '#type' => 'textfield',
     '#default_value' => $settings['width'],
     '#options' => $link_types,
+  );
+
+  $form['height'] = array(
+    '#title' => t('Height'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['height'],
   );
 
   return $form;
@@ -179,5 +179,5 @@ function mediaelement_field_formatter_settings_form($field, $instance, $view_mod
 function mediaelement_field_formatter_settings_summary($field, $instance, $view_mode) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-  return t('Height: @height px, Width: @width px', array('@height' => $settings['height'], '@width' => $settings['width']));
+  return t('Width: @width px, Height: @height px', array('@width' => $settings['width'], '@height' => $settings['height']));
 }
