@@ -32,9 +32,9 @@ function mediaelement_admin_form() {
   drupal_add_library('mediaelement', 'mediaelement');
   drupal_add_js(drupal_get_path('module', 'mediaelement') . '/mediaelement.js');
   drupal_add_js(array('mediaelementAll' => TRUE), array('type' => 'setting'));
-  $path = libraries_get_path('mediaelement');
+  $path = libraries_get_path('mediaelement', TRUE);
   $form['test'] = array(
-    '#markup' => '<video width="360" height="203" id="player1" src="/' . $path . '/media/jsaddington.mp4"><p>Your browser leaves much to be desired.</p></video>',
+    '#markup' => '<video width="360" height="203" id="player1" src="' . $path . '/media/jsaddington.mp4"><p>Your browser leaves much to be desired.</p></video>',
   );
 
   return system_settings_form($form);
