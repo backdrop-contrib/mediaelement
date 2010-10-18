@@ -152,10 +152,10 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
 function mediaelement_theme() {
   return array(
     'mediaelement_video' => array(
-      'variables' => array('attributes' => array(), 'class'=> '', 'settings' => array()),
+      'variables' => array('attributes' => array(), 'class' => '', 'settings' => array()),
     ),
     'mediaelement_audio' => array(
-      'variables' => array('attributes' => array(), 'class'=> '', 'settings' => array()),
+      'variables' => array('attributes' => array(), 'class' => '', 'settings' => array()),
     ),
   );
 }
