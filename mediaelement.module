@@ -122,7 +122,7 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
         'src' => file_create_url($item[$path_name]),
         'class' => $class,
       ),
-      '#class' => $settings['class'],
+      '#class' => filter_xss_admin($settings['class']),
       '#settings' => $settings,
       '#attached' => array(
         'library' => array(array('mediaelement', 'mediaelement')),
@@ -164,7 +164,7 @@ function theme_mediaelement_video($variables) {
   $output = empty($variables['class']) ? '<div>' : '<div class="' . $variables['class'] . '">';
   $output .= '<video ' . drupal_attributes($variables['attributes']) . ' ></video>';
   if ($variables['settings']['download_link']) {
-    $output .= '<div class="mediaelement-download-link"><a href="' . $variables['attributes']['src'] . '">' . $variables['settings']['download_text'] . '</a></div>';
+    $output .= '<div class="mediaelement-download-link"><a href="' . $variables['attributes']['src'] . '">' . filter_xss_admin($variables['settings']['download_text']) . '</a></div>';
   }
   $output .= '</div>';
   return $output;
@@ -174,7 +174,7 @@ function theme_mediaelement_audio($variables) {
   $output = empty($variables['class']) ? '<div>' : '<div class="' . $variables['class'] . '">';
   $output .= '<audio ' . drupal_attributes($variables['attributes']) . ' ></audio>';
   if ($variables['settings']['download_link']) {
-    $output .= '<div class="mediaelement-download-link"><a href="' . $variables['attributes']['src'] . '">' . $variables['settings']['download_text'] . '</a></div>';
+    $output .= '<div class="mediaelement-download-link"><a href="' . $variables['attributes']['src'] . '">' . filter_xss_admin($variables['settings']['download_text']) . '</a></div>';
   }
   $output .= '</div>';
   return $output;
