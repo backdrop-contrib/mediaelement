@@ -15,7 +15,7 @@ Installation
 Usage
 --------------------------------------------------------------------------------
 
-Set a file field to use video (or audio) as its display formatter.
+Set a file field or link field to use video (or audio) as its display formatter.
 Or use the media module (http://drupal.org/project/media) if you want to have your
 file field display images and video.
 

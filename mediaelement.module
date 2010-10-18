@@ -71,6 +71,8 @@ function mediaelement_field_formatter_info() {
       'width' => variable_get('mediaelement_video_default_width', '640'),
       'height' => variable_get('mediaelement_video_default_height', '385'),
       'class' => variable_get('mediaelement_video_default_class', ''),
+      'download_link' => variable_get('mediaelement_video_default_download_link', FALSE),
+      'download_text' => variable_get('mediaelement_video_default_download_text', t('Download')),
     ),
   );
 
@@ -82,6 +84,8 @@ function mediaelement_field_formatter_info() {
       'width' => variable_get('mediaelement_audio_default_width', '300'),
       'height' => variable_get('mediaelement_audio_default_height', '30'),
       'class' => variable_get('mediaelement_audio_default_class', ''),
+      'download_link' => variable_get('mediaelement_audio_default_download_link', FALSE),
+      'download_text' => variable_get('mediaelement_audio_default_download_text', t('Download')),
     ),
   );
 
@@ -157,13 +161,23 @@ function mediaelement_theme() {
 }
 
 function theme_mediaelement_video($variables) {
-  $div = empty($variables['class']) ? '<div>' : '<div class="' . $variables['class'] . '">';
-  return $div . '<video ' . drupal_attributes($variables['attributes']) . ' ></video></div>';
+  $output = empty($variables['class']) ? '<div>' : '<div class="' . $variables['class'] . '">';
+  $output .= '<video ' . drupal_attributes($variables['attributes']) . ' ></video>';
+  if ($variables['settings']['download_link']) {
+    $output .= '<div class="mediaelement-download-link"><a href="' . $variables['attributes']['src'] . '">' . $variables['settings']['download_text'] . '</a></div>';
+  }
+  $output .= '</div>';
+  return $output;
 }
 
 function theme_mediaelement_audio($variables) {
-  $div = empty($variables['class']) ? '<div>' : '<div class="' . $variables['class'] . '">';
-  return $div . '<audio ' . drupal_attributes($variables['attributes']) . ' ></audio></div>';
+  $output = empty($variables['class']) ? '<div>' : '<div class="' . $variables['class'] . '">';
+  $output .= '<audio ' . drupal_attributes($variables['attributes']) . ' ></audio>';
+  if ($variables['settings']['download_link']) {
+    $output .= '<div class="mediaelement-download-link"><a href="' . $variables['attributes']['src'] . '">' . $variables['settings']['download_text'] . '</a></div>';
+  }
+  $output .= '</div>';
+  return $output;
 }
 
 /**
@@ -198,6 +212,18 @@ function mediaelement_field_formatter_settings_form($field, $instance, $view_mod
     '#default_value' => $settings['class'],
     '#description' => t('The class name must contain only lowercase letters, numbers, and hyphens.'),
     '#element_validate' => array('_mediaelement_validate_class'),
+  );
+
+  $form['download_link'] = array(
+    '#title' => t('Download Link'),
+    '#type' => 'checkbox',
+    '#default_value' => $settings['download_link'],
+  );
+
+  $form['download_text'] = array(
+    '#title' => t('Download Link Text'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['download_text'],
   );
 
   return $form;
