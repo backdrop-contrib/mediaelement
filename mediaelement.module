@@ -68,7 +68,8 @@ function mediaelement_field_formatter_info() {
     'field types' => array('file'),
     'settings' => array(
       'width' => variable_get('mediaelement_video_default_width', '640'),
-      'height' => variable_get('mediaelement_video_default_height', '385')
+      'height' => variable_get('mediaelement_video_default_height', '385'),
+      'class' => variable_get('mediaelement_video_default_class', ''),
     ),
   );
 
@@ -77,7 +78,8 @@ function mediaelement_field_formatter_info() {
     'field types' => array('file'),
     'settings' => array(
       'width' => variable_get('mediaelement_audio_default_width', '300'),
-      'height' => variable_get('mediaelement_audio_default_height', '30')
+      'height' => variable_get('mediaelement_audio_default_height', '30'),
+      'class' => variable_get('mediaelement_audio_default_class', ''),
     ),
   );
 
@@ -112,6 +114,7 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
         'src' => file_create_url($item['uri']),
         'class' => $class,
       ),
+      '#class' => $settings['class'],
       '#settings' => $settings,
       '#attached' => array(
         'library' => array(array('mediaelement', 'mediaelement')),
@@ -131,6 +134,7 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
       $element[$delta]['#theme'] = 'mediaelement_audio';
     }
   }
+  //debug($element);
   return $element;
 }
 
@@ -140,20 +144,22 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
 function mediaelement_theme() {
   return array(
     'mediaelement_video' => array(
-      'variables' => array('attributes' => array(), 'settings' => array()),
+      'variables' => array('attributes' => array(), 'class'=> '', 'settings' => array()),
     ),
     'mediaelement_audio' => array(
-      'variables' => array('attributes' => array(), 'settings' => array()),
+      'variables' => array('attributes' => array(), 'class'=> '', 'settings' => array()),
     ),
   );
 }
 
 function theme_mediaelement_video($variables) {
-  return '<video ' . drupal_attributes($variables['attributes']) . ' ></video>';
+  $div = empty($variables['class']) ? '<div>' : '<div class="' . $variables['class'] . '">';
+  return $div . '<video ' . drupal_attributes($variables['attributes']) . ' ></video></div>';
 }
 
 function theme_mediaelement_audio($variables) {
-  return '<audio ' . drupal_attributes($variables['attributes']) . ' ></audio>';
+  $div = empty($variables['class']) ? '<div>' : '<div class="' . $variables['class'] . '">';
+  return $div . '<audio ' . drupal_attributes($variables['attributes']) . ' ></audio></div>';
 }
 
 /**
@@ -176,6 +182,14 @@ function mediaelement_field_formatter_settings_form($field, $instance, $view_mod
     '#default_value' => $settings['height'],
   );
 
+  $form['class'] = array(
+    '#title' => t('CSS Class'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['class'],
+    '#description' => t('The class name must contain only lowercase letters, numbers, and hyphens.'),
+    '#element_validate' => array('_mediaelement_validate_class'),
+  );
+
   return $form;
 }
 
@@ -185,5 +199,12 @@ function mediaelement_field_formatter_settings_form($field, $instance, $view_mod
 function mediaelement_field_formatter_settings_summary($field, $instance, $view_mode) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-  return t('Width: @width px, Height: @height px', array('@width' => $settings['width'], '@height' => $settings['height']));
+  $class = empty($settings['class']) ? '<em>' . t('None') . '</em>' : $settings['class'];
+  return t('Width: @width px, Height: @height px, Class: !class', array('@width' => $settings['width'], '@height' => $settings['height'], '!class' => $class));
+}
+
+function _mediaelement_validate_class($element, &$form_state) {
+  if ($element['#value'] != drupal_clean_css_identifier($element['#value'])) {
+    form_set_error($element, t('The class name must contain only lowercase letters, numbers, and hyphens.'));
+  }
 }
