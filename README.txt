@@ -46,6 +46,12 @@ For more details on the MediaElement API see http://mediaelementjs.com
 
 Changelog
 --------------------------------------------------------------------------------
+7.x-1.0 Beta 1:
+- Added download media option.
+- Added support to disable the controls.
+- Added link.module support.
+- Added configurable classes for each formatter settings. This will aid in
+  custom themeing for each place a formatter is used.
 
 7.x-1.x Alpha 1:
 - Provide a global option for video and audio tags.
