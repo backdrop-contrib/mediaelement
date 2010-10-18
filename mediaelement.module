@@ -67,6 +67,7 @@ function mediaelement_field_formatter_info() {
     'label' => t('MediaElement Video'),
     'field types' => array('file', 'link_field'),
     'settings' => array(
+      'controls' => variable_get('mediaelement_video_default_controls', TRUE),
       'width' => variable_get('mediaelement_video_default_width', '640'),
       'height' => variable_get('mediaelement_video_default_height', '385'),
       'class' => variable_get('mediaelement_video_default_class', ''),
@@ -77,6 +78,7 @@ function mediaelement_field_formatter_info() {
     'label' => t('MediaElement Audio'),
     'field types' => array('file', 'link_field'),
     'settings' => array(
+      'controls' => variable_get('mediaelement_audio_default_contorls', TRUE),
       'width' => variable_get('mediaelement_audio_default_width', '300'),
       'height' => variable_get('mediaelement_audio_default_height', '30'),
       'class' => variable_get('mediaelement_audio_default_class', ''),
@@ -99,15 +101,15 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
     // file and link_field keep the path/link in a different property name.
     $path_name = ($field['type'] == 'file') ? 'uri' : 'url';
     $settings = $display['settings'];
+    $js_settings = array();
+    $js_settings['controls'] = (bool)$settings['controls'];
     if ($display['type'] == 'mediaelement_video') {
-      $settings['videoHeight'] = (int)$settings['height'];
-      $settings['videoWidth'] = (int)$settings['width'];
-      unset($settings['height'], $settings['width']);
+      $js_settings['videoHeight'] = (int)$settings['height'];
+      $js_settings['videoWidth'] = (int)$settings['width'];
     }
     elseif ($display['type'] == 'mediaelement_audio') {
-      $settings['audioHeight'] = (int)$settings['height'];
-      $settings['audioWidth'] = (int)$settings['width'];
-      unset($settings['height'], $settings['width']);
+      $js_settings['audioHeight'] = (int)$settings['height'];
+      $js_settings['audioWidth'] = (int)$settings['width'];
     }
 
     $class = 'mediaelement-formatter-identifier-' . time() . '-' . $id++;
@@ -122,7 +124,7 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
         'library' => array(array('mediaelement', 'mediaelement')),
         'js' => array(
           $path . '/mediaelement.js' => array(),
-          0 => array('type' => 'setting', 'data' => array('mediaelement' => array('.' . $class => $settings))),
+          0 => array('type' => 'setting', 'data' => array('mediaelement' => array('.' . $class => $js_settings))),
         ),
       ),
     );
@@ -170,6 +172,12 @@ function theme_mediaelement_audio($variables) {
 function mediaelement_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
+
+  $form['controls'] = array(
+    '#title' => t('Controls'),
+    '#type' => 'checkbox',
+    '#default_value' => $settings['controls'],
+  );
 
   $form['width'] = array(
     '#title' => t('Width'),

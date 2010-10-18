@@ -8,7 +8,12 @@
       if (Drupal.settings.mediaelement != undefined) {
         $.each(Drupal.settings.mediaelement, function(selector, options) {
           $(selector, context).once('mediaelement', function() {
-            $(this).mediaelementplayer(options);
+            if (options.controls) {
+              $(this).mediaelementplayer(options);
+            }
+            else {
+              $(this).mediaelement();
+            }
           });
         })
       }
