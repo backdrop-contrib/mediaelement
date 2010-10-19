@@ -129,6 +129,9 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
         ),
       ),
     );
+    if ($settings['controls']) {
+      $element[$delta]['#attributes']['controls'] = 'controls';
+    }
 
     if ($display['type'] == 'mediaelement_video') {
       $element[$delta]['#theme'] = 'mediaelement_video';
