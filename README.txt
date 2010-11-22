@@ -46,6 +46,10 @@ For more details on the MediaElement API see http://mediaelementjs.com
 
 Changelog
 --------------------------------------------------------------------------------
+7.x-1.0 Beta 2:
+- Updated to MediaElement.js changes.
+- Updated to Drupal API changes.
+
 7.x-1.0 Beta 1:
 - Added download media option.
 - Added support to disable the controls.
