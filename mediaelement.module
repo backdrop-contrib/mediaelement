@@ -34,11 +34,11 @@ function mediaelement_library() {
     'website' => 'http://mediaelementjs.com/',
     'version' => '7.x',
     'js' => array(
-      $path . '/src/mediaelement.js' => array('weight' => JS_LIBRARY - 5),
-      $path . '/src/mediaelementplayer.js' => array('weight' => JS_LIBRARY - 5),
+      $path . '/src/js/mediaelement.js' => array('group' => JS_LIBRARY),
+      $path . '/src/js/mediaelementplayer.js' => array('group' => JS_LIBRARY),
     ),
     'css' => array(
-      $path . '/src/mediaelementplayer.css'
+      $path . '/src/css/mediaelementplayer.css' => array('group' => CSS_SYSTEM),
     ),
   );
   return $libraries;
