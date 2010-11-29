@@ -103,14 +103,15 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
     $path_name = ($field['type'] == 'file') ? 'uri' : 'url';
     $settings = $display['settings'];
     $js_settings = array();
+    $js_settings['opts'] = array();
     $js_settings['controls'] = (bool)$settings['controls'];
     if ($display['type'] == 'mediaelement_video') {
-      $js_settings['videoHeight'] = (int)$settings['height'];
-      $js_settings['videoWidth'] = (int)$settings['width'];
+      $js_settings['opts']['videoHeight'] = (int)$settings['height'];
+      $js_settings['opts']['videoWidth'] = (int)$settings['width'];
     }
     elseif ($display['type'] == 'mediaelement_audio') {
-      $js_settings['audioHeight'] = (int)$settings['height'];
-      $js_settings['audioWidth'] = (int)$settings['width'];
+      $js_settings['opts']['audioHeight'] = (int)$settings['height'];
+      $js_settings['opts']['audioWidth'] = (int)$settings['width'];
     }
 
     $class = 'mediaelement-formatter-identifier-' . time() . '-' . $id++;
@@ -141,7 +142,6 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
       $element[$delta]['#theme'] = 'mediaelement_audio';
     }
   }
-  //debug($element);
   return $element;
 }
 

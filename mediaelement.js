@@ -6,10 +6,12 @@
   Drupal.behaviors.mediaelement = {
     attach: function(context, settings) {
       if (settings.mediaelement !== undefined) {
+        // @todo Remove anonymous function.
         $.each(settings.mediaelement, function(selector, options) {
+          var opts;
           $(selector, context).once('mediaelement', function() {
             if (options.controls) {
-              $(this).mediaelementplayer(options);
+              $(this).mediaelementplayer(options.opts);
             }
             else {
               $(this).mediaelement();
