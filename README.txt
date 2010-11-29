@@ -38,6 +38,7 @@ settings. For example:
 $settings = array('mediaelement' => array(
   '.class-name' => array(
     'controls' => TRUE,
+    'opts' => array(), // This is the mediaelement scripts options.
   );
 ));
 drupal_add_js($settings, 'setting');
@@ -46,6 +47,10 @@ For more details on the MediaElement API see http://mediaelementjs.com
 
 Changelog
 --------------------------------------------------------------------------------
+7.x-1.0 Beta 3:
+- Fixed bug where mediaelement js was having options passed in that were not its
+  own and were causing the script to break.
+
 7.x-1.0 Beta 2:
 - Updated to MediaElement.js changes.
 - Updated to Drupal API changes.
