@@ -32,9 +32,14 @@ function mediaelement_library() {
   $libraries['mediaelement'] = array(
     'title' => 'Media Element',
     'website' => 'http://mediaelementjs.com/',
-    'version' => '1.1.7',
+    'version' => '2.0.3',
     'js' => array(
-      $path . '/build/mediaelement-and-player.min.js' => array('group' => JS_LIBRARY),
+      // The mediaelement script detects the path to itself to call other files
+      // in the same location. With preprocessing this is problematic as the
+      // script is no longer in the same directory as its other assets. There
+      // is an option that can be passed into the script with its location.
+      // @todo Update all calls to mediaelement to pass in the assets location.
+      $path . '/build/mediaelement-and-player.min.js' => array('group' => JS_LIBRARY, 'preprocess' => FALSE),
     ),
     'css' => array(
       $path . '/build/mediaelementplayer.min.css' => array('group' => CSS_SYSTEM),
