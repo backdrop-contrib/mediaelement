@@ -1,4 +1,3 @@
-// $Id$
 (function($, Drupal, undefined){
   /**
    * When set to enable mediaelement for all audio/video files add it to the page.

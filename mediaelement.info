@@ -1,4 +1,3 @@
-; $Id$
 name = "MediaElement.js"
 description = "Provide MediaElement.js to be used on the entire site or just with Filefields."
 core = 7.x
