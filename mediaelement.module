@@ -82,7 +82,7 @@ function mediaelement_field_formatter_info() {
     'label' => t('MediaElement Audio'),
     'field types' => array('file', 'link_field'),
     'settings' => array(
-      'controls' => variable_get('mediaelement_audio_default_contorls', TRUE),
+      'controls' => variable_get('mediaelement_audio_default_controls', TRUE),
       'width' => variable_get('mediaelement_audio_default_width', '300'),
       'height' => variable_get('mediaelement_audio_default_height', '30'),
       'download_link' => variable_get('mediaelement_audio_default_download_link', FALSE),
