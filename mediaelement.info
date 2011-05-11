@@ -5,3 +5,4 @@ dependencies[] = libraries
 files[] = mediaelement.admin.inc
 files[] = mediaelement.install
 files[] = mediaelement.module
+configure = admin/config/media/mediaelement
