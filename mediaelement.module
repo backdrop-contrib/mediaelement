@@ -6,6 +6,31 @@
  */
 
 /**
+ * Render audio and video with MediaElement.
+ *
+ * @param mixed $file
+ *   Either a string with a path to a file or an array of paths to files.
+ * @param array $options
+ *   - id: Optionally set the unique ID. Otherwise the MediaElement module
+ *     creates a unique one using a static count variable.
+ *   - width: Width of the player in pixels or percentage.
+ *   - height: Height of the player in pixels or percentage.
+ *   - controls: Disable or enable the controls.
+ *   - opts: MediaElement.js API options.
+ *   - attributes: Override defaults for theme_mediaelement_audio().
+ *   - settings: Override defaults for theme_mediaelement_audio().
+ *   - type: video or audio. Otherwise MediaElement module determines it by the
+ *     file extension of $file.
+ *
+ * @return string
+ *   The html to inject into the page is returned. Apart from this, the
+ *   javaScript needed to support the html is added using Drupal APIs.
+ */
+function mediaelement_render($file, array $options = array()) {
+	
+}
+
+/**
  * Implements hook_menu().
  */
 function mediaelement_menu() {
