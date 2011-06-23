@@ -56,7 +56,7 @@ function mediaelement_library() {
   $libraries['mediaelement'] = array(
     'title' => 'Media Element',
     'website' => 'http://mediaelementjs.com/',
-    'version' => '2.0.3',
+    'version' => '2.1.6',
     'js' => array(
       // The mediaelement script detects the path to itself to call other files
       // in the same location. With preprocessing this is problematic as the
