@@ -213,39 +213,39 @@ function theme_mediaelement_audio($variables) {
 function mediaelement_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-
-  $form['controls'] = array(
+  $element = array();
+ 
+  $element['controls'] = array(
     '#title' => t('Controls'),
     '#type' => 'checkbox',
     '#default_value' => $settings['controls'],
   );
 
-  $form['width'] = array(
+  $element['width'] = array(
     '#title' => t('Width'),
     '#type' => 'textfield',
     '#default_value' => $settings['width'],
-    '#options' => $link_types,
   );
 
-  $form['height'] = array(
+  $element['height'] = array(
     '#title' => t('Height'),
     '#type' => 'textfield',
     '#default_value' => $settings['height'],
   );
 
-  $form['download_link'] = array(
+  $element['download_link'] = array(
     '#title' => t('Download Link'),
     '#type' => 'checkbox',
     '#default_value' => $settings['download_link'],
   );
 
-  $form['download_text'] = array(
+  $element['download_text'] = array(
     '#title' => t('Download Link Text'),
     '#type' => 'textfield',
     '#default_value' => $settings['download_text'],
   );
 
-  return $form;
+  return $element;
 }
 
 /**
