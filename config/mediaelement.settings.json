@@ -1,0 +1,14 @@
+{
+  "_config_name": "mediaelement.settings",
+  "mediaelement_sitewide": 0,
+  "mediaelement_video_default_controls": 1,
+  "mediaelement_video_default_width": 640,
+  "mediaelement_video_default_height": 385,
+  "mediaelement_video_default_download_link": 0,
+  "mediaelement_video_default_download_text": "Download",
+  "mediaelement_audio_default_controls": 1,
+  "mediaelement_audio_default_width": 300,
+  "mediaelement_audio_default_height": 30,
+  "mediaelement_audio_default_download_link": 0,
+  "mediaelement_audio_default_download_text": "Download"
+}

@@ -1,8 +1,8 @@
-(function($, Drupal, undefined){
+(function($, Backdrop, undefined){
   /**
    * When set to enable mediaelement for all audio/video files add it to the page.
    */
-  Drupal.behaviors.mediaelement = {
+  Backdrop.behaviors.mediaelement = {
     attach: function(context, settings) {
       if (settings.mediaelement !== undefined) {
         // @todo Remove anonymous function.
@@ -18,13 +18,13 @@
           });
         });
       }
-      // The global option is seperate from the other selectors as it should be
+      // The global option is separate from the other selectors as it should be
       // run after any other selectors.
       if (settings.mediaelementAll !== undefined) {
-        $('video,audio', context).once('mediaelement', function() {
+        $('a.media,video', context).once('mediaelement', function() {
           $(this).mediaelementplayer();
         });
       }
     }
   };
-})(jQuery, Drupal);
+})(jQuery, Backdrop);

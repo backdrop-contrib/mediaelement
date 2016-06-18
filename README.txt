@@ -20,16 +20,16 @@ file field display images and video.
 
 API
 --------------------------------------------------------------------------------
-This module supplies the MediaElement library as a Drupal library and has some
+This module supplies the MediaElement library as a Backdrop library and has some
 helper functions if you want to use it independently of fields. To add the
 library into a page use the command:
 
-drupal_add_library('mediaelement', 'mediaelement');
+backdrop_add_library('mediaelement', 'mediaelement');
 
 If you want to Use the helper scripts include the script mediaelement.js included
 with the module. You can do it using a command like:
 
-drupal_add_js(drupal_get_path('module', 'mediaelement') . '/mediaelement.js');
+backdrop_add_js(backdrop_get_path('module', 'mediaelement') . '/mediaelement.js');
 
 Then you need to add settings for the script. They are a selector for jQuery and
 settings. For example:
@@ -40,7 +40,7 @@ $settings = array('mediaelement' => array(
     'opts' => array(), // This is the mediaelement scripts options.
   );
 ));
-drupal_add_js($settings, 'setting');
+backdrop_add_js($settings, 'setting');
 
 For more details on the MediaElement API see http://mediaelementjs.com
 

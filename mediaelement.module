@@ -24,7 +24,7 @@
  *
  * @return string
  *   The html to inject into the page is returned. Apart from this, the
- *   javaScript needed to support the html is added using Drupal APIs.
+ *   javaScript needed to support the html is added using Backdrop APIs.
  */
 function mediaelement_render($file, array $options = array()) {
 	
@@ -36,9 +36,9 @@ function mediaelement_render($file, array $options = array()) {
 function mediaelement_menu() {
   return array(
     'admin/config/media/mediaelement' => array(
-      'title' => 'MediaElement.js',
-      'description' => 'Settings for MediaElement.js integration with Drupal',
-      'page callback' => 'drupal_get_form',
+      'title' => 'Mediaelement',
+      'description' => 'Settings for mediaelement.js integration with Backdrop',
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('mediaelement_admin_form'),
       'access arguments' => array('administer site configuration'),
       'file' => 'mediaelement.admin.inc',
@@ -77,10 +77,10 @@ function mediaelement_library() {
  */
 function mediaelement_init() {
   // When the media player is set to be on all pages add it to the page.
-  if (variable_get('mediaelement_sitewide', FALSE)) {
-    drupal_add_library('mediaelement', 'mediaelement');
-    drupal_add_js(drupal_get_path('module', 'mediaelement') . '/mediaelement.js');
-    drupal_add_js(array('mediaelementAll' => TRUE), array('type' => 'setting'));
+  if (config_get('mediaelement.settings','mediaelement_sitewide')) {
+    backdrop_add_library('mediaelement', 'mediaelement');
+    backdrop_add_js(backdrop_get_path('module', 'mediaelement') . '/mediaelement.js');
+    backdrop_add_js(array('mediaelementAll' => TRUE), array('type' => 'setting'));
   }
 }
 
@@ -95,11 +95,11 @@ function mediaelement_field_formatter_info() {
     'label' => t('MediaElement Video'),
     'field types' => array('file', 'link_field'),
     'settings' => array(
-      'controls' => variable_get('mediaelement_video_default_controls', TRUE),
-      'width' => variable_get('mediaelement_video_default_width', '640'),
-      'height' => variable_get('mediaelement_video_default_height', '385'),
-      'download_link' => variable_get('mediaelement_video_default_download_link', FALSE),
-      'download_text' => variable_get('mediaelement_video_default_download_text', t('Download')),
+      'controls' => config_get('mediaelement.settings','mediaelement_video_default_controls'),
+      'width' => config_get('mediaelement.settings','mediaelement_video_default_width'),
+      'height' => config_get('mediaelement.settings','mediaelement_video_default_height'),
+      'download_link' => config_get('mediaelement.settings','mediaelement_video_default_download_link'),
+      'download_text' => config_get('mediaelement.settings','mediaelement_video_default_download_text'),
     ),
   );
 
@@ -107,11 +107,11 @@ function mediaelement_field_formatter_info() {
     'label' => t('MediaElement Audio'),
     'field types' => array('file', 'link_field'),
     'settings' => array(
-      'controls' => variable_get('mediaelement_audio_default_controls', TRUE),
-      'width' => variable_get('mediaelement_audio_default_width', '300'),
-      'height' => variable_get('mediaelement_audio_default_height', '30'),
-      'download_link' => variable_get('mediaelement_audio_default_download_link', FALSE),
-      'download_text' => variable_get('mediaelement_audio_default_download_text', t('Download')),
+      'controls' => config_get('mediaelement.settings','mediaelement_audio_default_controls'),
+      'width' => config_get('mediaelement.settings','mediaelement_audio_default_width'),
+      'height' => config_get('mediaelement.settings','mediaelement_audio_default_height'),
+      'download_link' => config_get('mediaelement.settings','mediaelement_audio_default_download_link'),
+      'download_text' => config_get('mediaelement.settings','mediaelement_audio_default_download_text'),
     ),
   );
 
@@ -126,7 +126,7 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
   // different for ever page view and should not be used for styling.
   static $id = 0;
   $element = array();
-  $path = drupal_get_path('module', 'mediaelement');
+  $path = backdrop_get_path('module', 'mediaelement');
   foreach ($items as $delta => $item) {
     // file and link_field keep the path/link in a different property name.
     $settings = $display['settings'];
@@ -189,7 +189,7 @@ function mediaelement_theme() {
 
 function theme_mediaelement_video($variables) {
   $output = '<div class="mediaelement-video">';
-  $output .= '<video ' . drupal_attributes($variables['attributes']) . ' ></video>';
+  $output .= '<video ' . backdrop_attributes($variables['attributes']) . ' ></video>';
   if ($variables['settings']['download_link']) {
     $output .= '<div class="mediaelement-download-link"><a href="' . $variables['attributes']['src'] . '">' . filter_xss_admin($variables['settings']['download_text']) . '</a></div>';
   }
@@ -199,7 +199,7 @@ function theme_mediaelement_video($variables) {
 
 function theme_mediaelement_audio($variables) {
   $output = '<div class="mediaelement-audio">';
-  $output .= '<audio ' . drupal_attributes($variables['attributes']) . ' ></audio>';
+  $output .= '<audio ' . backdrop_attributes($variables['attributes']) . ' ></audio>';
   if ($variables['settings']['download_link']) {
     $output .= '<div class="mediaelement-download-link"><a href="' . $variables['attributes']['src'] . '">' . filter_xss_admin($variables['settings']['download_text']) . '</a></div>';
   }
@@ -255,4 +255,16 @@ function mediaelement_field_formatter_settings_summary($field, $instance, $view_
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
   return t('Width: @width px, Height: @height px', array('@width' => $settings['width'], '@height' => $settings['height']));
+}
+
+
+/**
+ * Implements hook_config_info().
+ */
+function mediaelement_config_info() {
+  $prefixes['mediaelement.settings'] = array(
+    'label' => t('Media Element'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
 }
