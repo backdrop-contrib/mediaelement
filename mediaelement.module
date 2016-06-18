@@ -47,9 +47,9 @@ function mediaelement_menu() {
 }
 
 /**
- * Implements hook_library().
+ * Implements hook_library_info().
  */
-function mediaelement_library() {
+function mediaelement_library_info() {
   $path = libraries_get_path('mediaelement');
   $libraries = array();
 
