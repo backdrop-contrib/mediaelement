@@ -27,7 +27,7 @@
  *   javaScript needed to support the html is added using Backdrop APIs.
  */
 function mediaelement_render($file, array $options = array()) {
-	
+
 }
 
 /**
@@ -63,7 +63,10 @@ function mediaelement_library_info() {
       // script is no longer in the same directory as its other assets. There
       // is an option that can be passed into the script with its location.
       // @todo Update all calls to mediaelement to pass in the assets location.
-      $path . '/build/mediaelement-and-player.min.js' => array('group' => JS_LIBRARY, 'preprocess' => FALSE),
+      $path . '/build/mediaelement-and-player.min.js' => array(
+        'group' => JS_LIBRARY,
+        'preprocess' => FALSE
+      ),
     ),
     'css' => array(
       $path . '/build/mediaelementplayer.min.css' => array('group' => CSS_SYSTEM),
@@ -77,7 +80,7 @@ function mediaelement_library_info() {
  */
 function mediaelement_init() {
   // When the media player is set to be on all pages add it to the page.
-  if (config_get('mediaelement.settings','mediaelement_sitewide')) {
+  if (config_get('mediaelement.settings', 'mediaelement_sitewide')) {
     backdrop_add_library('mediaelement', 'mediaelement');
     backdrop_add_js(backdrop_get_path('module', 'mediaelement') . '/mediaelement.js');
     backdrop_add_js(array('mediaelementAll' => TRUE), array('type' => 'setting'));
@@ -95,11 +98,11 @@ function mediaelement_field_formatter_info() {
     'label' => t('MediaElement Video'),
     'field types' => array('file', 'link_field'),
     'settings' => array(
-      'controls' => config_get('mediaelement.settings','mediaelement_video_default_controls'),
-      'width' => config_get('mediaelement.settings','mediaelement_video_default_width'),
-      'height' => config_get('mediaelement.settings','mediaelement_video_default_height'),
-      'download_link' => config_get('mediaelement.settings','mediaelement_video_default_download_link'),
-      'download_text' => config_get('mediaelement.settings','mediaelement_video_default_download_text'),
+      'controls' => config_get('mediaelement.settings', 'mediaelement_video_default_controls'),
+      'width' => config_get('mediaelement.settings', 'mediaelement_video_default_width'),
+      'height' => config_get('mediaelement.settings', 'mediaelement_video_default_height'),
+      'download_link' => config_get('mediaelement.settings', 'mediaelement_video_default_download_link'),
+      'download_text' => config_get('mediaelement.settings', 'mediaelement_video_default_download_text'),
     ),
   );
 
@@ -107,11 +110,11 @@ function mediaelement_field_formatter_info() {
     'label' => t('MediaElement Audio'),
     'field types' => array('file', 'link_field'),
     'settings' => array(
-      'controls' => config_get('mediaelement.settings','mediaelement_audio_default_controls'),
-      'width' => config_get('mediaelement.settings','mediaelement_audio_default_width'),
-      'height' => config_get('mediaelement.settings','mediaelement_audio_default_height'),
-      'download_link' => config_get('mediaelement.settings','mediaelement_audio_default_download_link'),
-      'download_text' => config_get('mediaelement.settings','mediaelement_audio_default_download_text'),
+      'controls' => config_get('mediaelement.settings', 'mediaelement_audio_default_controls'),
+      'width' => config_get('mediaelement.settings', 'mediaelement_audio_default_width'),
+      'height' => config_get('mediaelement.settings', 'mediaelement_audio_default_height'),
+      'download_link' => config_get('mediaelement.settings', 'mediaelement_audio_default_download_link'),
+      'download_text' => config_get('mediaelement.settings', 'mediaelement_audio_default_download_text'),
     ),
   );
 
@@ -123,7 +126,7 @@ function mediaelement_field_formatter_info() {
  */
 function mediaelement_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   // A unique caller per page for the JS specific settings to use. This may be
-  // different for ever page view and should not be used for styling.
+  // different for every page view and should not be used for styling.
   static $id = 0;
   $element = array();
   $path = backdrop_get_path('module', 'mediaelement');
@@ -132,14 +135,14 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
     $settings = $display['settings'];
     $js_settings = array();
     $js_settings['opts'] = array();
-    $js_settings['controls'] = (bool)$settings['controls'];
+    $js_settings['controls'] = (bool) $settings['controls'];
     if ($display['type'] == 'mediaelement_video') {
-      $js_settings['opts']['videoHeight'] = (int)$settings['height'];
-      $js_settings['opts']['videoWidth'] = (int)$settings['width'];
+      $js_settings['opts']['videoHeight'] = (int) $settings['height'];
+      $js_settings['opts']['videoWidth'] = (int) $settings['width'];
     }
     elseif ($display['type'] == 'mediaelement_audio') {
-      $js_settings['opts']['audioHeight'] = (int)$settings['height'];
-      $js_settings['opts']['audioWidth'] = (int)$settings['width'];
+      $js_settings['opts']['audioHeight'] = (int) $settings['height'];
+      $js_settings['opts']['audioWidth'] = (int) $settings['width'];
     }
 
     $class = 'mediaelement-formatter-identifier-' . time() . '-' . $id++;
@@ -153,7 +156,10 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
         'library' => array(array('mediaelement', 'mediaelement')),
         'js' => array(
           $path . '/mediaelement.js' => array(),
-          0 => array('type' => 'setting', 'data' => array('mediaelement' => array('.' . $class => $js_settings))),
+          0 => array(
+            'type' => 'setting',
+            'data' => array('mediaelement' => array('.' . $class => $js_settings))
+          ),
         ),
       ),
     );
@@ -214,7 +220,7 @@ function mediaelement_field_formatter_settings_form($field, $instance, $view_mod
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
   $element = array();
- 
+
   $element['controls'] = array(
     '#title' => t('Controls'),
     '#type' => 'checkbox',
@@ -254,7 +260,10 @@ function mediaelement_field_formatter_settings_form($field, $instance, $view_mod
 function mediaelement_field_formatter_settings_summary($field, $instance, $view_mode) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-  return t('Width: @width px, Height: @height px', array('@width' => $settings['width'], '@height' => $settings['height']));
+  return t('Width: @width px, Height: @height px', array(
+    '@width' => $settings['width'],
+    '@height' => $settings['height']
+  ));
 }
 
 

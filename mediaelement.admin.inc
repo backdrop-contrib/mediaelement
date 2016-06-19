@@ -23,7 +23,7 @@ function mediaelement_admin_form() {
   $form['mediaelement_sitewide'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable MediaElement.js site wide'),
-    '#default_value' => config_get('mediaelement.settings','mediaelement_sitewide'),
+    '#default_value' => config_get('mediaelement.settings', 'mediaelement_sitewide'),
   );
 
   // Display a sample video. We add the library here because we cannot be sure
@@ -36,43 +36,43 @@ function mediaelement_admin_form() {
     '#markup' => '<video width="360" height="203" id="player1" src="' . $path . '/media/echo-hereweare.mp4"><p>Your browser leaves much to be desired.</p></video>',
   );
 
-	$config = config('mediaelement.settings');
+  $config = config('mediaelement.settings');
 
-	$form['mediaelement_video_default_width'] = array(
-	  '#type' => 'textfield',
-		'#title' => t('Video width'),
-		'#description' => t('Set the width of the video display'),
-		'#default_value' => $config->get('mediaelement_video_default_width'),
+  $form['mediaelement_video_default_width'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Video width'),
+    '#description' => t('Set the width of the video display'),
+    '#default_value' => $config->get('mediaelement_video_default_width'),
     '#required' => TRUE,
     '#size' => 5,
-	);
+  );
 
-		$form['mediaelement_video_default_height'] = array(
-	  '#type' => 'textfield',
-		'#title' => t('Video height'),
-		'#description' => t('Set the height of the media display'),
-		'#default_value' => $config->get('mediaelement_video_default_height'),
+  $form['mediaelement_video_default_height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Video height'),
+    '#description' => t('Set the height of the media display'),
+    '#default_value' => $config->get('mediaelement_video_default_height'),
     '#required' => TRUE,
     '#size' => 5,
-	);
+  );
 
-		$form['mediaelement_audio_default_height'] = array(
-	  '#type' => 'textfield',
-		'#title' => t('Audio height'),
-		'#description' => t('Set the height of the audio display'),
-		'#default_value' => $config->get('mediaelement_audio_default_height'),
+  $form['mediaelement_audio_default_height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Audio height'),
+    '#description' => t('Set the height of the audio display'),
+    '#default_value' => $config->get('mediaelement_audio_default_height'),
     '#required' => TRUE,
     '#size' => 5,
-	);
+  );
 
-		$form['mediaelement_audio_default_width'] = array(
-	  '#type' => 'textfield',
-		'#title' => t('Audio width'),
-		'#description' => t('Set the width of the audio display'),
-		'#default_value' => $config->get('mediaelement_audio_default_width'),
+  $form['mediaelement_audio_default_width'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Audio width'),
+    '#description' => t('Set the width of the audio display'),
+    '#default_value' => $config->get('mediaelement_audio_default_width'),
     '#required' => TRUE,
     '#size' => 5,
-	);
+  );
 
   // Add a submit button
   $form['actions']['#type'] = 'actions';
@@ -92,13 +92,13 @@ function mediaelement_admin_form() {
 function mediaelement_admin_form_submit($form, &$form_state) {
 
   $config = config('mediaelement.settings');
-	$config->set('mediaelement_sitewide', $form_state['values']['mediaelement_sitewide']);
-	$config->set('mediaelement_video_default_width', $form_state['values']['mediaelement_video_default_width']);
-	$config->set('mediaelement_video_default_height', $form_state['values']['mediaelement_video_default_height']);
-	$config->set('mediaelement_audio_default_width', $form_state['values']['mediaelement_audio_default_width']);
-	$config->set('mediaelement_audio_default_height', $form_state['values']['mediaelement_audio_default_height']);
+  $config->set('mediaelement_sitewide', $form_state['values']['mediaelement_sitewide']);
+  $config->set('mediaelement_video_default_width', $form_state['values']['mediaelement_video_default_width']);
+  $config->set('mediaelement_video_default_height', $form_state['values']['mediaelement_video_default_height']);
+  $config->set('mediaelement_audio_default_width', $form_state['values']['mediaelement_audio_default_width']);
+  $config->set('mediaelement_audio_default_height', $form_state['values']['mediaelement_audio_default_height']);
 
-	$config->save();
+  $config->save();
 
   backdrop_set_message(t('The configuration options have been saved.'));
 }

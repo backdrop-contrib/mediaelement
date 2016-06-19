@@ -21,7 +21,7 @@
       // The global option is separate from the other selectors as it should be
       // run after any other selectors.
       if (settings.mediaelementAll !== undefined) {
-        $('a.media,video', context).once('mediaelement', function() {
+        $('video,audio', context).once('mediaelement', function() {
           $(this).mediaelementplayer();
         });
       }

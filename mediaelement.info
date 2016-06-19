@@ -1,4 +1,4 @@
-name = "MediaElement"
+name = "Media Element"
 description = "Provide mediaelement.js to be used on the entire site or just with Filefields."
 backdrop = 1.x
 type = module
